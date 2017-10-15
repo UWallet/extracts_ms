@@ -18,11 +18,14 @@ app_settings = os.getenv('APP_SETTINGS')
 app.config.from_object(app_settings)
 
 
-@app.route('/json', methods=['POST'])
-def pdf2():
+@app.route('/generateAll/<int:post_id>')
+def pdf2(post_id):
     output = io.BytesIO()
     p = canvas.Canvas(output)
-    data     = request.get_json()
+
+    url = "http://192.168.99.101:3000/by_user_id?userid="+str(post_id)
+    response2 = urllib.request.urlopen(url)
+    data = json.loads(response2.read())
 
     #variables envios
     envios_recibidos =  data[u'total_receive']
@@ -152,6 +155,7 @@ def pdf2():
     output.close()
 
     response = make_response(pdf_out)
-    response.headers['Content-Disposition'] = "attachment; filename=extractos.pdf"
-    response.mimetype = 'application/pdf'
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = "inline; filename=extractos.pdf"
+    #response.mimetype = 'application/pdf'
     return response
