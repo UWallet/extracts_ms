@@ -7,6 +7,7 @@ from reportlab.pdfgen import canvas
 import io
 import urllib.request
 import json
+from reportlab.pdfbase.pdfmetrics import stringWidth
 
 
 # instantiate the app
@@ -22,30 +23,49 @@ def pdf2():
     output = io.BytesIO()
     p = canvas.Canvas(output)
     data     = request.get_json()
+
+    #variables envios
     envios_recibidos =  data[u'total_receive']
     envios_realizados = data[u'total_send']
-    p.drawString(10, 785, "Cantidad de envios recibidos....... "+str(envios_recibidos))
-    p.drawString(10, 770, "Cantidad de envios realizados....... "+str(envios_realizados))
-    p.drawString(10, 755, "ID")
-    p.drawString(90, 755, "REMITENTE")
-    p.drawString(200, 755, "MONTO")
-    p.drawString(320, 755, "ESTADO")
-    p.drawString(400, 755, "FECHA")
-    p.drawString(500, 755, "HORA")
+    cargas_tarjeta = data[u'total_load']
 
-    aux = 740-15*(envios_recibidos)
-    p.drawString(10, aux, "ID")
-    p.drawString(90, aux, "DESTINATARIO")
-    p.drawString(200, aux, "MONTO")
-    p.drawString(320, aux, "ESTADO")
-    p.drawString(400, aux, "FECHA")
-    p.drawString(500, aux, "HORA")
-    fila = 0
+    p.setFont('Helvetica-Bold', 10)
+    #impresión cantidad de transacciones por tipo
+    p.drawString(20, 810, "Cargas desde tarjeta....... "+str(cargas_tarjeta))
+    p.drawString(20, 795, "Envios recibidos........... "+str(envios_recibidos))
+    p.drawString(20, 780, "Envios realizados.......... "+str(envios_realizados))
+
+    #Nombres de columna de envios
+    p.setFont('Helvetica-Bold', 12)
+    p.drawString(15, 755, "DINERO ENVIADO:")
+    p.setFont('Helvetica-Bold', 10)
+    p.drawString(20, 740, "N. Transacción")
+    p.drawString(110, 740, "Remitente")
+    p.drawString(210, 740, "Monto")
+    p.drawString(300, 740, "Estado")
+    p.drawString(370, 740, "Fecha")
+    p.drawString(470, 740, "Hora")
+
+    aux = 695-15*(envios_recibidos)
+    #Nombres de columna de recibidos
+    p.setFont('Helvetica-Bold', 12)
+    p.drawString(15, aux+15, "DINERO RECIBIDO:")
+    p.setFont('Helvetica-Bold', 10)
+    p.drawString(20, aux, "N. Transacción")
+    p.drawString(110, aux, "Destinatario")
+    p.drawString(210, aux, "Monto")
+    p.drawString(300, aux, "Estado")
+    p.drawString(370, aux, "Fecha")
+    p.drawString(470, aux, "Hora")
+
+    p.setFont('Helvetica', 9)
+    fila = 15
     for i in range(0, len(data[u'list_receive'])):
-        p.drawString(10, 740-fila, str(data[u'list_receive'][i][u'id']))
-        p.drawString(90, 740-fila, str(data[u'list_receive'][i][u'useridgiving']))
-        p.drawString(200, 740-fila, str(data[u'list_receive'][i][u'amount']))
-        p.drawString(320, 740-fila, str(data[u'list_receive'][i][u'state']))
+        tam_id = len(str(data[u'list_receive'][i][u'id']))
+        p.drawString(24, 740-fila, ('0'*(10-tam_id))+str(data[u'list_receive'][i][u'id']))
+        p.drawString(114, 740-fila, str(data[u'list_receive'][i][u'useridgiving']))
+        p.drawString(214, 740-fila, '$'+str(data[u'list_receive'][i][u'amount']))
+        p.drawString(304, 740-fila, str(data[u'list_receive'][i][u'state']))
         s_aux = str(data[u'list_receive'][i][u'updated_at'])
         hora = ""
         fecha = ""
@@ -59,15 +79,17 @@ def pdf2():
                 fecha += c
             else:
                 hora += c
-        p.drawString(400, 740-fila, fecha)
-        p.drawString(500, 740-fila, hora)
+        p.drawString(374, 740-fila, fecha)
+        p.drawString(474, 740-fila, hora)
         fila += 15
+
     fila = 15
     for i in range(0, len(data[u'list_send'])):
-        p.drawString(10, aux-fila, str(data[u'list_send'][i][u'id']))
-        p.drawString(90, aux-fila, str(data[u'list_send'][i][u'useridreceiving']))
-        p.drawString(200, aux-fila, str(data[u'list_send'][i][u'amount']))
-        p.drawString(320, aux-fila, str(data[u'list_send'][i][u'state']))
+        tam_id = len(str(data[u'list_send'][i][u'id']))
+        p.drawString(24, aux-fila, ('0'*(10-tam_id))+str(data[u'list_send'][i][u'id']))
+        p.drawString(114, aux-fila, str(data[u'list_send'][i][u'useridreceiving']))
+        p.drawString(214, aux-fila, '$'+str(data[u'list_send'][i][u'amount']))
+        p.drawString(304, aux-fila, str(data[u'list_send'][i][u'state']))
         s_aux = str(data[u'list_send'][i][u'updated_at'])
         hora = ""
         fecha = ""
@@ -81,9 +103,45 @@ def pdf2():
                 fecha += c
             else:
                 hora += c
-        p.drawString(400, aux-fila, fecha)
-        p.drawString(500, aux-fila, hora)
+        p.drawString(374, aux-fila, fecha)
+        p.drawString(474, aux-fila, hora)
         fila += 15
+
+    aux = aux-fila-30
+    p.setFont('Helvetica-Bold', 12)
+    p.drawString(15, aux+15, "DINERO CARGADO DESDE LA TARJETA:")
+    p.setFont('Helvetica-Bold', 10)
+    #Nombres de columna de cargas desde tarjeta
+    p.drawString(20, aux, "N. Transacción")
+    p.drawString(210, aux, "Monto")
+    p.drawString(300, aux, "Estado")
+    p.drawString(370, aux, "Fecha")
+    p.drawString(470, aux, "Hora")
+
+    p.setFont('Helvetica', 9)
+    fila = 15
+    for i in range(0, len(data[u'list_load'])):
+        tam_id = len(str(data[u'list_load'][i][u'id']))
+        p.drawString(24, aux-fila, ('0'*(10-tam_id))+str(data[u'list_load'][i][u'id']))
+        p.drawString(214, aux-fila, '$'+str(data[u'list_load'][i][u'amount']))
+        p.drawString(304, aux-fila, str(data[u'list_load'][i][u'state']))
+        s_aux = str(data[u'list_load'][i][u'updated_at'])
+        hora = ""
+        fecha = ""
+        b_aux = 1
+        for c in s_aux:
+            if(c=='T'):
+                b_aux = 0
+            elif(c=='Z'):
+                b_aux = 0
+            elif(b_aux==1):
+                fecha += c
+            else:
+                hora += c
+        p.drawString(374, aux-fila, fecha)
+        p.drawString(474, aux-fila, hora)
+        fila += 15
+
 
     p.showPage()
     p.save()

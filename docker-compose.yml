@@ -6,7 +6,7 @@ services:
     container_name: extracts_ms
     build: .
     volumes:
-      - '.:/home/diego/Documentos/ms/flask-microservices-users'
+      - '.:/home/diego/Descargas/extracts_ms'
     ports:
       - 3004:5000 # expose ports - HOST:CONTAINER
     environment:
