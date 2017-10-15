@@ -63,7 +63,8 @@ def pdf2():
     for i in range(0, len(data[u'list_receive'])):
         tam_id = len(str(data[u'list_receive'][i][u'id']))
         p.drawString(24, 740-fila, ('0'*(10-tam_id))+str(data[u'list_receive'][i][u'id']))
-        p.drawString(114, 740-fila, str(data[u'list_receive'][i][u'useridgiving']))
+        tam_id2 = len(str(data[u'list_receive'][i][u'useridgiving']))
+        p.drawString(114, 740-fila, ('0'*(10-tam_id2))+str(data[u'list_receive'][i][u'useridgiving']))
         p.drawString(214, 740-fila, '$'+str(data[u'list_receive'][i][u'amount']))
         p.drawString(304, 740-fila, str(data[u'list_receive'][i][u'state']))
         s_aux = str(data[u'list_receive'][i][u'updated_at'])
@@ -87,7 +88,8 @@ def pdf2():
     for i in range(0, len(data[u'list_send'])):
         tam_id = len(str(data[u'list_send'][i][u'id']))
         p.drawString(24, aux-fila, ('0'*(10-tam_id))+str(data[u'list_send'][i][u'id']))
-        p.drawString(114, aux-fila, str(data[u'list_send'][i][u'useridreceiving']))
+        tam_id2 = len(str(data[u'list_send'][i][u'useridreceiving']))
+        p.drawString(114, aux-fila, ('0'*(10-tam_id2))+str(data[u'list_send'][i][u'useridreceiving']))
         p.drawString(214, aux-fila, '$'+str(data[u'list_send'][i][u'amount']))
         p.drawString(304, aux-fila, str(data[u'list_send'][i][u'state']))
         s_aux = str(data[u'list_send'][i][u'updated_at'])
