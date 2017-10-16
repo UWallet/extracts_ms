@@ -38,9 +38,9 @@ def pdf2(post_id):
     p.drawString(20, 795, "Envios recibidos........... "+str(envios_recibidos))
     p.drawString(20, 780, "Envios realizados.......... "+str(envios_realizados))
 
-    #Nombres de columna de envios
+    #Nombres de columna de DINERO RECIBIDO
     p.setFont('Helvetica-Bold', 12)
-    p.drawString(15, 755, "DINERO ENVIADO:")
+    p.drawString(15, 755, "DINERO RECIBIDO:")
     p.setFont('Helvetica-Bold', 10)
     p.drawString(20, 740, "N. Transacción")
     p.drawString(110, 740, "Remitente")
@@ -50,9 +50,9 @@ def pdf2(post_id):
     p.drawString(470, 740, "Hora")
 
     aux = 695-15*(envios_recibidos)
-    #Nombres de columna de recibidos
+    #Nombres de columna de DINERO ENVIADO
     p.setFont('Helvetica-Bold', 12)
-    p.drawString(15, aux+15, "DINERO RECIBIDO:")
+    p.drawString(15, aux+15, "DINERO ENVIADO:")
     p.setFont('Helvetica-Bold', 10)
     p.drawString(20, aux, "N. Transacción")
     p.drawString(110, aux, "Destinatario")
@@ -181,7 +181,7 @@ def pdf3(user_id,days):
 
     #Nombres de columna de envios
     p.setFont('Helvetica-Bold', 12)
-    p.drawString(15, 755, "DINERO ENVIADO:")
+    p.drawString(15, 755, "DINERO RECIBIDO:")
     p.setFont('Helvetica-Bold', 10)
     p.drawString(20, 740, "N. Transacción")
     p.drawString(110, 740, "Remitente")
@@ -193,7 +193,7 @@ def pdf3(user_id,days):
     aux = 695-15*(envios_recibidos)
     #Nombres de columna de recibidos
     p.setFont('Helvetica-Bold', 12)
-    p.drawString(15, aux+15, "DINERO RECIBIDO:")
+    p.drawString(15, aux+15, "DINERO ENVIADO:")
     p.setFont('Helvetica-Bold', 10)
     p.drawString(20, aux, "N. Transacción")
     p.drawString(110, aux, "Destinatario")
