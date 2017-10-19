@@ -2,12 +2,15 @@
 
 
 import os
-from flask import Flask, jsonify, make_response, request
+from flask import Flask, jsonify, make_response, request, Response
 from reportlab.pdfgen import canvas
 import io
 import urllib.request
 import json
 from reportlab.pdfbase.pdfmetrics import stringWidth
+import sys
+from PyPDF2 import PdfFileWriter, PdfFileReader
+from flask_mail import Mail, Message
 
 
 # instantiate the app
@@ -18,22 +21,32 @@ app_settings = os.getenv('APP_SETTINGS')
 app.config.from_object(app_settings)
 
 
-@app.route('/generateAll/<int:post_id>')
-def pdf2(post_id):
+app.config.update(
+	DEBUG=True,
+	#EMAIL SETTINGS
+	MAIL_SERVER='smtp.gmail.com',
+	MAIL_PORT=465,
+	MAIL_USE_SSL=True,
+	MAIL_USERNAME = 'uwallet6@gmail.com',
+	MAIL_PASSWORD = 'unal12345'
+	)
+
+mail=Mail(app)
+
+@app.route('/json/<correo>', methods=['POST'])
+def pdf2(correo):
+
     output = io.BytesIO()
-    p = canvas.Canvas(output)
+    p = canvas.Canvas("/usr/src/app/project/extractos.pdf")
 
-    url = "http://192.168.99.101:3000/by_user_id?userid="+str(post_id)
-    response2 = urllib.request.urlopen(url)
-    data = json.loads(response2.read())
+    data = request.get_json()
 
-    #variables envios
     envios_recibidos =  data[u'total_receive']
     envios_realizados = data[u'total_send']
     cargas_tarjeta = data[u'total_load']
 
+
     p.setFont('Helvetica-Bold', 10)
-    #impresión cantidad de transacciones por tipo
     p.drawString(20, 810, "Cargas desde tarjeta....... "+str(cargas_tarjeta))
     p.drawString(20, 795, "Envios recibidos........... "+str(envios_recibidos))
     p.drawString(20, 780, "Envios realizados.......... "+str(envios_realizados))
@@ -147,18 +160,21 @@ def pdf2(post_id):
         p.drawString(474, aux-fila, hora)
         fila += 15
 
-
-    p.showPage()
+    #p.showPage()
     p.save()
+
+    msg = Message("Extractos", sender="uwallet6@gmail.com", recipients=[correo])
+
+    with app.open_resource("extractos.pdf") as fp:
+        msg.attach("extractos.pdf","application/pdf", fp.read())
+
+    mail.send(msg)
+
 
     pdf_out = output.getvalue()
     output.close()
+    return "Sent"
 
-    response = make_response(pdf_out)
-    response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = "inline; filename=extractos.pdf"
-    #response.mimetype = 'application/pdf'
-    return response
 
 @app.route('/generateDays/<int:user_id>/<int:days>')
 def pdf3(user_id,days):
