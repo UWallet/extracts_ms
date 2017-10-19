@@ -196,7 +196,7 @@ def pdf3(correo,i_dia,i_mes,i_anno,f_dia,f_mes,f_anno):
   fecha_final += str(f_mes)+"-"
   if(len(str(f_dia))==1):
     fecha_final += "0"
-  fecha_final += str(f_dia)+"T00:00:00.000Z"
+  fecha_final += str(f_dia)+"T99:99:99.999Z"
 
   envios_recibidos =  data[u'total_receive']
   envios_realizados = data[u'total_send']
