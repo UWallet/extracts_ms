@@ -327,11 +327,11 @@ def pdf3(correo,i_dia,i_mes,i_anno,f_dia,f_mes,f_anno):
   p.drawString(20, 780, "Envios realizados.......... "+str(total_enviados_pdf))
 
   p.save()
-  msg = Message("Extractos "+fecha_inicial+"--"+fecha_final, sender="uwallet6@gmail.com", recipients=[correo])
+  msg = Message("Extractos "+fecha_inicial[0:10]+"---"+fecha_final[0:10], sender="uwallet6@gmail.com", recipients=[correo])
 
 
 
-  msg.body = "Transacciones realizadas entre la fecha: "+fecha_inicial +" y la fecha "+fecha_final+"\n"+"Gracias por usar UWalllet"
+  msg.body = "Transacciones realizadas entre la fecha: "+fecha_inicial[0:10] +" y la fecha "+fecha_final[0:10]+".\n"+"Gracias por usar UWalllet."
 
   with app.open_resource("extractos.pdf") as fp:
     msg.attach("extractos.pdf","application/pdf", fp.read())
