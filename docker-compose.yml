@@ -3,10 +3,11 @@ version: '2.1'
 services:
 
   users-service:
-    container_name: extracts_ms
-    build: .
+    container_name: extracts-ms
+    #build: .
+    image: kmendezp/extracts-ms
     volumes:
-      - '.:/home/diego/Descargas/extracts_ms'
+      - '.:/home/diego/Descargas/extracts-ms'
     ports:
       - 3004:5000 # expose ports - HOST:CONTAINER
     environment:
