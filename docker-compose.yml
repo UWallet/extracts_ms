@@ -6,8 +6,8 @@ services:
     container_name: extracts-ms
     #build: .
     image: kmendezp/extracts-ms
-    volumes:
-      - '.:/home/diego/Descargas/extracts-ms'
+    #volumes:
+    #  - '.:/home/diego/Descargas/extracts-ms'
     ports:
       - 3004:5000 # expose ports - HOST:CONTAINER
     environment:
