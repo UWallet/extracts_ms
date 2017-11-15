@@ -1,7 +1,7 @@
 ./rancher-compose --project-name extracts-ms \
 --url http://192.168.99.100:8080/v1/projects/1a5 \
---access-key 70EE95E3F0704CB1BC85 \
---secret-key UbkJvYrYRBub9fsXxmzAP8GF2QVtmE4MsyeuFEBw \
+--access-key FBAB038DE14B30A9A7DE \
+--secret-key jPbprS4Fd2zDByeGsE9SBnvJGGK6EVyu41mQvaVs \
 -f docker-compose.yml \
 --verbose up \
 -d --force-upgrade \
