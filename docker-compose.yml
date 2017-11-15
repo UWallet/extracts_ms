@@ -1,4 +1,4 @@
-version: '2.1'
+version: '2'
 
 services:
 
@@ -9,6 +9,6 @@ services:
     #volumes:
     #  - '.:/home/diego/Descargas/extracts-ms'
     ports:
-      - 3004:3004 # expose ports - HOST:CONTAINER
+      - "3004:3004" # expose ports - HOST:CONTAINER
     environment:
       - APP_SETTINGS=project.config.DevelopmentConfig
